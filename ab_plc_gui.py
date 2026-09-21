@@ -29,6 +29,7 @@ from matplotlib.figure import Figure  # noqa: E402
 
 from ab_plc_driver import PLCDriver, TagReading, csv_logger
 
+APP_VERSION = "1.0.0"
 POLL_INTERVAL_SEC = 1.0
 CHECKED_MARK = "☑"
 UNCHECKED_MARK = "☐"
@@ -64,6 +65,7 @@ class PLCApp(tk.Tk):
         self._color_swatch_buttons: dict[str, tk.Button] = {}
 
         self._build_widgets()
+        self._build_menu()
         self.protocol("WM_DELETE_WINDOW", self._on_close)
         self.after(150, self._drain_queue)
         self.after(500, self._redraw_trend_if_dirty)
@@ -131,6 +133,25 @@ class PLCApp(tk.Tk):
             padding=(10, 0, 10, 10),
         )
         hint.pack(fill="x")
+
+    def _build_menu(self):
+        menubar = tk.Menu(self)
+        help_menu = tk.Menu(menubar, tearoff=0)
+        help_menu.add_command(label="About", command=self._show_about)
+        menubar.add_cascade(label="Help", menu=help_menu)
+        self.config(menu=menubar)
+
+    def _show_about(self):
+        messagebox.showinfo(
+            "About AB PLC Reader",
+            "AB PLC Reader\n"
+            f"Version {APP_VERSION}\n\n"
+            "EtherNet/IP tag reader and live trend viewer for Allen-Bradley\n"
+            "ControlLogix / CompactLogix (Logix5000 family) PLCs.\n\n"
+            "Built on pycomm3 (github.com/ottowayi/pycomm3) and matplotlib.\n\n"
+            "Security note: EtherNet/IP (CIP) has no built-in authentication\n"
+            "or encryption. Use only on a trusted, segmented OT network.",
+        )
 
     def _build_tag_table(self, parent):
         columns = ("monitor", "tag", "value", "type", "updated")
