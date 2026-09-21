@@ -221,6 +221,20 @@ class PLCDriver:
             self._poll_thread = None
 
 
+_FORMULA_LEAD_CHARS = ("=", "+", "-", "@", "\t", "\r")
+
+
+def _csv_safe(value: object) -> object:
+    """
+    Neutralize spreadsheet formula injection: if a cell's text starts with a
+    character Excel/Sheets treats as a formula prefix, prepend a single quote
+    so it's opened as literal text instead of evaluated.
+    """
+    if isinstance(value, str) and value.startswith(_FORMULA_LEAD_CHARS):
+        return "'" + value
+    return value
+
+
 def csv_logger(csv_path: str | Path) -> Callable[[list[TagReading]], None]:
     """
     Build a poll() callback that appends each batch of readings to a CSV
@@ -236,7 +250,8 @@ def csv_logger(csv_path: str | Path) -> Callable[[list[TagReading]], None]:
             if is_new:
                 writer.writeheader()
             for r in readings:
-                writer.writerow(r.as_row())
+                row = {k: _csv_safe(v) for k, v in r.as_row().items()}
+                writer.writerow(row)
 
     return _callback
 
