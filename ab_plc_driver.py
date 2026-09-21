@@ -15,6 +15,8 @@ Usage:
     driver.poll(["Line1_Speed", "Tank_Level"], interval=1.0, callback=my_handler)
 """
 
+# Developed by Brendan Lamb with Claude Code. Genuine and focused.
+
 from __future__ import annotations
 
 import csv

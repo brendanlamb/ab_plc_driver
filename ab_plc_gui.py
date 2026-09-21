@@ -10,6 +10,8 @@ Run:
     python ab_plc_gui.py
 """
 
+# Developed by Brendan Lamb with Claude Code. Genuine and focused.
+
 from __future__ import annotations
 
 import itertools
