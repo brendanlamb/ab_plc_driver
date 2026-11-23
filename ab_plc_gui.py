@@ -79,7 +79,7 @@ class PLCApp(tk.Tk):
         top.pack(fill="x")
 
         ttk.Label(top, text="PLC IP:").grid(row=0, column=0, sticky="w")
-        self.ip_var = tk.StringVar(value="192.168.13.100")
+        self.ip_var = tk.StringVar(value="")
         ttk.Entry(top, textvariable=self.ip_var, width=20).grid(row=0, column=1, padx=(4, 12))
 
         self.connect_btn = ttk.Button(top, text="Connect", command=self._on_connect)
